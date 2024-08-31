@@ -124,7 +124,7 @@ class LogoutView(APIView):
     def get(self,request):
         request.user.auth_token.delete()
         logout(request)
-        return redirect('login')
+        return redirect('https://vaccine-hub.netlify.app/')
     
     
 class UserNameUpdateView(generics.RetrieveUpdateAPIView):
