@@ -75,7 +75,7 @@ class DoctorRegistrationViewSet(APIView):
             uid = urlsafe_base64_encode(force_bytes(user.pk))
 
             # Prepare the confirmation email
-            confirm_link = f"http://127.0.0.1:8000/user/activate/{uid}/{token}"
+            confirm_link = f"https://vaccine-management-backend-phvj.onrender.com/user/activate/{uid}/{token}"
             email_subject = "Confirm your email"
             email_body = render_to_string('confirm_email.html', {'confirm_link': confirm_link})
             email = EmailMultiAlternatives(email_subject, '', to=[user.email])
