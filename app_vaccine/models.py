@@ -91,4 +91,4 @@ class Comment(models.Model):
 class VaccineTypeModel(models.Model):
     vaccine_type = models.CharField(max_length=20, choices=VACCINE_TYPE_CHOICES)
     type_img = models.ImageField(upload_to='images/vaccine/type', blank=True,null=True)
-    tye_description = models.CharField(max_length=100)
+    tye_description = models.CharField(max_length=500)
