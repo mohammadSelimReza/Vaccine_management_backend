@@ -48,7 +48,7 @@ class PatientRegistrationViewSet(generics.CreateAPIView):
             uid = urlsafe_base64_encode(force_bytes(user.pk))
 
             # Prepare the confirmation email
-            confirm_link = f"https://vaccine-management-backend-phvj.onrender.com/activate/{uid}/{token}"
+            confirm_link = f"https://vaccine-management-backend-phvj.onrender.com/user/activate/{uid}/{token}"
             email_subject = "Confirm your email"
             email_body = render_to_string('confirm_email.html', {'confirm_link': confirm_link})
             email = EmailMultiAlternatives(email_subject, '', to=[user.email])
@@ -98,7 +98,7 @@ def activate(request, uid64, token):
         user.save()
         return redirect('https://vaccine-hub.netlify.app')
     
-    return redirect('patientRegistration')
+    return redirect('https://vaccine-hub.netlify.app')
       
 
     
