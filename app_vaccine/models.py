@@ -15,6 +15,7 @@ class VaccineModel(models.Model):
     description = models.TextField(blank=True, null=True)
     vaccine_for = models.CharField(max_length=10, choices=VACCINE_FOR)
     vaccine_type = models.CharField(max_length=20, choices=VACCINE_TYPE_CHOICES)
+    vaccine_img = models.ImageField(upload_to='images/vaccine/', blank=True,null=True)
     added_by = models.ForeignKey(DoctorModel, on_delete=models.CASCADE, related_name='vaccines')
 
     def calculate_dose_dates(self, start_date):
@@ -35,6 +36,7 @@ class VaccineCampaignModel(models.Model):
     campaign_for = models.CharField(max_length=10, choices=VACCINE_FOR)
     added_by = models.ForeignKey(DoctorModel, on_delete=models.CASCADE, related_name='campaigns')
     description = models.TextField(blank=True, null=True)
+    campaign_img = models.ImageField(upload_to='images/campaign/', blank=True,null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

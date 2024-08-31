@@ -65,6 +65,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'corsheaders',
     'app_user',
+    'app_core',
     'app_vaccine',
 ]
 CLOUDINARY_STORAGE = {
