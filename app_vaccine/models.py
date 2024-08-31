@@ -87,3 +87,8 @@ class Comment(models.Model):
 
     def __str__(self):
         return f"Comment by {self.patient} on {self.campaign}"
+
+class VaccineTypeModel(models.Model):
+    vaccine_type = models.CharField(max_length=20, choices=VACCINE_TYPE_CHOICES)
+    type_img = models.ImageField(upload_to='images/vaccine/type', blank=True,null=True)
+    tye_description = models.CharField(max_length=100)

@@ -8,6 +8,7 @@ router.register(r'campaign',views.CampaignView,basename='campaignList')
 router.register(r'book-vaccine', views.BookVaccineViewSet, basename='book-vaccine')
 router.register(r'book-campaign', views.BookCampaignViewSet, basename='book-campaign')
 router.register(r'comments', views.CommentViewSet, basename='comment')
+router.register(r'vaccine-type', views.TypeViewSet, basename='type')
 urlpatterns = [
     path('', include(router.urls)),
     # Directly add the ListCreateAPIView to the urlpatterns

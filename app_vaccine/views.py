@@ -2,8 +2,8 @@ from rest_framework import generics,serializers
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import ValidationError
-from .models import VaccineModel,VaccineCampaignModel,BookingModel,BookingCampaignModel,Comment
-from .serializers import VaccineSerializer,VaccineCampaignSerializer,BookVaccineSerializer,BookCampaignSerializer,CommentSerializer
+from .models import VaccineModel,VaccineCampaignModel,BookingModel,BookingCampaignModel,Comment,VaccineTypeModel
+from .serializers import  VaccineTypeSerializer,VaccineSerializer,VaccineCampaignSerializer,BookVaccineSerializer,BookCampaignSerializer,CommentSerializer
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import AllowAny
 
@@ -90,3 +90,8 @@ class CommentViewSet(ModelViewSet):
             serializer.save(patient=user)
         else:
             raise PermissionDenied("You must be logged in to leave a comment.")
+        
+class TypeViewSet(ModelViewSet):
+    queryset = VaccineTypeModel.objects.all()
+    serializer_class = VaccineTypeSerializer
+    permission_classes = [AllowAny]

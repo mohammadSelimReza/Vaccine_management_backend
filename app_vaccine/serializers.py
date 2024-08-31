@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import VaccineModel,VaccineCampaignModel,BookingModel,BookingCampaignModel,Comment
+from .models import VaccineModel,VaccineCampaignModel,BookingModel,BookingCampaignModel,VaccineTypeModel,Comment
 from datetime import date
 from django.core.exceptions import ValidationError
 from django.shortcuts import get_object_or_404
@@ -62,3 +62,8 @@ class CommentSerializer(serializers.ModelSerializer):
         patient = get_object_or_404(PatientModel, user=user)
         validated_data['patient'] = patient
         return super().create(validated_data)
+
+class VaccineTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = VaccineTypeModel
+        fields = '__all__'
