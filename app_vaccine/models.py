@@ -3,6 +3,8 @@ from .constants import VACCINE_FOR, VACCINE_TYPE_CHOICES, BANGLADESH_DISTRICTS
 from app_user.models import DoctorModel, PatientModel
 from datetime import timedelta
 
+# import get_object_or_404()
+from django.shortcuts import get_object_or_404
 class VaccineModel(models.Model):
     vaccine_name = models.CharField(max_length=50)
     slug = models.SlugField(max_length=60, unique=True, blank=True)
@@ -68,7 +70,7 @@ class BookingCampaignModel(models.Model):
     campaign_name = models.ForeignKey(VaccineCampaignModel, on_delete=models.CASCADE, related_name='booked_campaign')
     first_dose_date = models.DateField()
     dose_dates = models.JSONField(default=list, blank=True)
-
+    is_booked = models.BooleanField(default=False)
     def save(self, *args, **kwargs):
         if not self.dose_dates:
             self.dose_dates = self.campaign_name.campaign_vaccine.calculate_dose_dates(self.first_dose_date)
@@ -80,11 +82,13 @@ class Comment(models.Model):
     campaign = models.ForeignKey(VaccineCampaignModel, on_delete=models.CASCADE, related_name='comments')
     text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
-    is_booked = models.BooleanField(default=False)
-
     class Meta:
         unique_together = ('patient', 'campaign') 
-
+    def create(self, validated_data):
+        user = self.context['request'].user
+        patient = get_object_or_404(PatientModel, user=user)
+        validated_data['patient'] = patient
+        return super().create(validated_data)
     def __str__(self):
         return f"Comment by {self.patient} on {self.campaign}"
 

@@ -75,7 +75,9 @@ class BookCampaignViewSet(ModelViewSet):
     def perform_create(self, serializer):
         user = self.request.user
         if user.is_authenticated:
-            serializer.save()  # Or handle patient information as needed
+            booking = serializer.save()
+            booking.is_booked = True
+            booking.save()
         else:
             raise PermissionDenied("You must be logged in to book a vaccine.")
         
