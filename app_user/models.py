@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from .validators import validate_nid,validate_phone_number,generate_unique_patient_number,validate_license_number
 from .constants import GENDER_TYPE,USER_TYPE,VACCINE_SPECIALIZATIONS
 from django.core.files.base import ContentFile
+from cloudinary.models import CloudinaryField
 # Create your models here.
 class PatientModel(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='patients')
@@ -14,7 +15,7 @@ class PatientModel(models.Model):
     street_address = models.CharField(max_length=100)
     zip_code = models.IntegerField()
     user_type = models.CharField(max_length=10, choices=USER_TYPE, blank=True, default='patient')
-    user_photo = models.ImageField(upload_to='images/user/', blank=True,null=True)
+    user_photo = CloudinaryField('images/user',blank=True, null=True)
     patient_id = models.CharField(max_length=6, unique=True, blank=True, editable=False)
     def save(self, *args, **kwargs):
         if not self.patient_id:
