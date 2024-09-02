@@ -4,6 +4,7 @@ from app_user.models import DoctorModel, PatientModel
 from datetime import timedelta
 from cloudinary.models import CloudinaryField
 # import get_object_or_404()
+from datetime import date
 from django.shortcuts import get_object_or_404
 class VaccineModel(models.Model):
     vaccine_name = models.CharField(max_length=50)
@@ -68,7 +69,7 @@ class BookingCampaignModel(models.Model):
     patient_name = models.CharField(max_length=20)
     patient_age = models.PositiveIntegerField()
     campaign_name = models.ForeignKey(VaccineCampaignModel, on_delete=models.CASCADE, related_name='booked_campaign')
-    
+    booked_date = models.DateField(default=date.today)
     is_booked = models.BooleanField(default=False)
     def __str__(self):
         return f"Booking by {self.patient_name} for {self.campaign_name}"
