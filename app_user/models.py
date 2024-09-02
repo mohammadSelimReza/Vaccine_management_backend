@@ -54,7 +54,7 @@ class DoctorModel(models.Model):
     specialization = models.CharField(max_length=50, choices=VACCINE_SPECIALIZATIONS)
     license_number = models.CharField(max_length=8, validators=[validate_license_number],unique=True)
     user_type = models.CharField(max_length=10, choices=USER_TYPE, default='doctor')
-    user_photo = models.ImageField(upload_to='images/user/', blank=True,null=True)
+    user_photo = models.URLField(max_length=255, blank=True, null=True)
     is_valid = models.BooleanField(default=False)
     def save(self, *args, **kwargs):
         if not self.user_photo:
