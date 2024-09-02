@@ -31,8 +31,6 @@ ALLOWED_HOSTS = ["*"]
 CSRF_TRUSTED_ORIGINS = ["https://vaccine-management-backend-phvj.onrender.com"]
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
-
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
@@ -43,12 +41,10 @@ REST_FRAMEWORK = {
         "rest_framework.permissions.IsAuthenticated",
     ],
 }
-
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
 }
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -66,15 +62,11 @@ INSTALLED_APPS = [
     'app_core',
     'app_vaccine',
 ]
-
 cloudinary.config(
     cloud_name = env('CLOUDINARY_CLOUD_NAME'),
     api_key = env('CLOUDINARY_API_KEY'),
     api_secret = env('CLOUDINARY_API_SECRET'),
 )
-
-import cloudinary.uploader
-import cloudinary.api
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -110,7 +102,6 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
 DATABASES = {
      'default': dj_database_url.config(
          default=env('POSTGRESQL'),
@@ -150,7 +141,6 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
-
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
@@ -161,12 +151,10 @@ MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_ROOT =  os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 LOGIN_URL = '/user/login/'
-
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
