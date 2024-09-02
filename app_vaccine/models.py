@@ -68,27 +68,17 @@ class BookingCampaignModel(models.Model):
     patient_name = models.CharField(max_length=20)
     patient_age = models.PositiveIntegerField()
     campaign_name = models.ForeignKey(VaccineCampaignModel, on_delete=models.CASCADE, related_name='booked_campaign')
-    first_dose_date = models.DateField()
-    dose_dates = models.JSONField(default=list, blank=True)
+    start_date = models.DateField()
     is_booked = models.BooleanField(default=False)
-    def save(self, *args, **kwargs):
-        if not self.dose_dates:
-            self.dose_dates = self.campaign_name.campaign_vaccine.calculate_dose_dates(self.first_dose_date)
-        super(BookingCampaignModel, self).save(*args, **kwargs)
-        
+    def __str__(self):
+        return f"Booking by {self.patient_name} for {self.campaign_name}"
 class Comment(models.Model):
     patient = models.ForeignKey(PatientModel, on_delete=models.CASCADE, related_name='comments')
     patient_name = models.CharField(max_length=30,default='person', blank=True)
     campaign = models.ForeignKey(VaccineCampaignModel, on_delete=models.CASCADE, related_name='comments')
     text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
-    class Meta:
-        unique_together = ('patient', 'campaign') 
-    def create(self, validated_data):
-        user = self.context['request'].user
-        patient = get_object_or_404(PatientModel, user=user)
-        validated_data['patient'] = patient
-        return super().create(validated_data)
+
     def __str__(self):
         return f"Comment by {self.patient} on {self.campaign}"
 

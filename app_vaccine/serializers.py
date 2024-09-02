@@ -43,36 +43,59 @@ class BookCampaignSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = BookingCampaignModel
-        fields = ['patient_name', 'patient_age', 'campaign_name', 'first_dose_date', 'dose_dates']
-        read_only_fields = ['dose_dates']
-
+        fields = '__all__'
     def validate_first_dose_date(self, value):
         if value < date.today():
             raise ValidationError("The date cannot be in the past.")
         return value
-
+    def create(self,validated_data):
+        validated_data['is_booked'] = True
+        return super().create(validated_data)
+        
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
-        fields = ['patient','patient_name', 'campaign', 'text', 'created_at']
-        read_only_fields = ['created_at']
+        fields = '__all__'
 
+    def validate(self, data):
+        user = self.context['request'].user
+        patient = get_object_or_404(PatientModel, user=user)
+        campaign = data['campaign']
+
+        # Check if the patient has booked this campaign
+        booking = BookingCampaignModel.objects.filter(patient=patient, campaign_name=campaign, is_booked=True).first()
+        if not booking:
+            raise serializers.ValidationError("You can only comment if you have booked this campaign.")
+        
+        return data
     def create(self, validated_data):
-            user = self.context['request'].user
-            patient = get_object_or_404(PatientModel, user=user)
-            validated_data['patient'] = patient
+        user = self.context['request'].user
+        patient = get_object_or_404(PatientModel, user=user)
+        validated_data['patient'] = patient
+        return super().create(validated_data)
+
+# class CommentSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Comment
+#         fields = ['patient','patient_name', 'campaign', 'text', 'created_at']
+#         read_only_fields = ['created_at']
+
+#     def create(self, validated_data):
+#             user = self.context['request'].user
+#             patient = get_object_or_404(PatientModel, user=user)
+#             validated_data['patient'] = patient
             
-            booking = get_object_or_404(
-                BookingCampaignModel,
-                patient_name=patient,
-                campaign_name=validated_data['campaign'],
-                is_booked=True
-            )
+#             booking = get_object_or_404(
+#                 BookingCampaignModel,
+#                 patient_name=patient,
+#                 campaign_name=validated_data['campaign'],
+#                 is_booked=True
+#             )
             
-            if not booking.is_booked:
-                raise ValidationError("You must have a confirmed booking to comment on this campaign.")
+#             if not booking.is_booked:
+#                 raise ValidationError("You must have a confirmed booking to comment on this campaign.")
             
-            return super().create(validated_data)
+#             return super().create(validated_data)
 
 class VaccineTypeSerializer(serializers.ModelSerializer):
     class Meta:

@@ -6,7 +6,8 @@ from .models import VaccineModel,VaccineCampaignModel,BookingModel,BookingCampai
 from .serializers import  VaccineTypeSerializer,VaccineSerializer,VaccineCampaignSerializer,BookVaccineSerializer,BookCampaignSerializer,CommentSerializer
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import AllowAny
-
+from django.shortcuts import get_object_or_404
+from app_user.models import PatientModel
 class VaccineView(ModelViewSet):
     queryset = VaccineModel.objects.all()
     serializer_class = VaccineSerializer
@@ -74,12 +75,8 @@ class BookCampaignViewSet(ModelViewSet):
 
     def perform_create(self, serializer):
         user = self.request.user
-        if user.is_authenticated:
-            booking = serializer.save()
-            booking.is_booked = True
-            booking.save()
-        else:
-            raise PermissionDenied("You must be logged in to book a vaccine.")
+        patient = get_object_or_404(PatientModel, user=user)
+        serializer.save(patient=patient, is_booked=True)
         
         
 class CommentViewSet(ModelViewSet):
@@ -88,10 +85,7 @@ class CommentViewSet(ModelViewSet):
 
     def perform_create(self, serializer):
         user = self.request.user
-        if user.is_authenticated:
-            serializer.save(patient=user)
-        else:
-            raise PermissionDenied("You must be logged in to leave a comment.")
+        serializer.save(patient=user.patients)
         
 class TypeViewSet(ModelViewSet):
     queryset = VaccineTypeModel.objects.all()
