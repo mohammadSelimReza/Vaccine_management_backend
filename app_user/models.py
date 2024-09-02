@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from .validators import validate_nid,validate_phone_number,generate_unique_patient_number,validate_license_number
 from .constants import GENDER_TYPE,USER_TYPE,VACCINE_SPECIALIZATIONS
 from django.core.files.base import ContentFile
-from cloudinary.models import CloudinaryField
+
 # Create your models here.
 class PatientModel(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='patients')
@@ -12,7 +12,7 @@ class PatientModel(models.Model):
     nid = models.IntegerField(validators=[validate_nid])
     phone_number = models.CharField(max_length=15, validators=[validate_phone_number])
     city = models.CharField(max_length=20)
-    street_address = models.CharField(max_length=100)
+    street_address = models.CharField(max_length=500)
     zip_code = models.IntegerField()
     user_type = models.CharField(max_length=10, choices=USER_TYPE, blank=True, default='patient')
     user_photo = models.URLField(max_length=255, blank=True, null=True)
@@ -49,7 +49,7 @@ class DoctorModel(models.Model):
     nid = models.IntegerField(unique=True)
     phone_number = models.CharField(max_length=15, validators=[validate_phone_number])
     city = models.CharField(max_length=20)
-    street_address = models.CharField(max_length=100)
+    street_address = models.CharField(max_length=500)
     zip_code = models.IntegerField()
     specialization = models.CharField(max_length=50, choices=VACCINE_SPECIALIZATIONS)
     license_number = models.CharField(max_length=8, validators=[validate_license_number],unique=True)
