@@ -15,7 +15,7 @@ class PatientModel(models.Model):
     street_address = models.CharField(max_length=100)
     zip_code = models.IntegerField()
     user_type = models.CharField(max_length=10, choices=USER_TYPE, blank=True, default='patient')
-    user_photo = CloudinaryField('images/user',blank=True, null=True)
+    user_photo = models.URLField(max_length=255, blank=True, null=True)
     patient_id = models.CharField(max_length=6, unique=True, blank=True, editable=False)
     def save(self, *args, **kwargs):
         if not self.patient_id:
