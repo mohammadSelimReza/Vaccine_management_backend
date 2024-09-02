@@ -43,7 +43,7 @@ class BookCampaignSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = BookingCampaignModel
-        fields = ['patient_name','patient_age','campaign_name','book_date']
+        fields = ['patient_name','patient_age','campaign_name','first_dose_date']
     def validate_first_dose_date(self, value):
         if value < date.today():
             raise ValidationError("The date cannot be in the past.")

@@ -68,7 +68,7 @@ class BookingCampaignModel(models.Model):
     patient_name = models.CharField(max_length=20)
     patient_age = models.PositiveIntegerField()
     campaign_name = models.ForeignKey(VaccineCampaignModel, on_delete=models.CASCADE, related_name='booked_campaign')
-    book_date = models.DateField()
+    
     is_booked = models.BooleanField(default=False)
     def __str__(self):
         return f"Booking by {self.patient_name} for {self.campaign_name}"
