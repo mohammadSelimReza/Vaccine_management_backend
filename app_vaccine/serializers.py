@@ -39,7 +39,6 @@ class BookVaccineSerializer(serializers.ModelSerializer):
         return value
     
 class BookCampaignSerializer(serializers.ModelSerializer):
-    first_dose_date = serializers.DateField(format='%Y-%m-%d')
 
     class Meta:
         model = BookingCampaignModel
