@@ -54,7 +54,7 @@ class BookCampaignSerializer(serializers.ModelSerializer):
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
-        fields = ['patient', 'patient_name','patient_img', 'campaign', 'text']
+        fields = ['patient_name','patient_img', 'campaign', 'text']
 
     def validate(self, data):
         user = self.context['request'].user
