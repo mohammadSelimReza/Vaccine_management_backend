@@ -74,9 +74,7 @@ class BookCampaignViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
-        user = self.request.user
-        patient = get_object_or_404(PatientModel, user=user)
-        serializer.save(patient=patient, is_booked=True)
+        serializer.save()
         
         
 class CommentViewSet(ModelViewSet):
@@ -85,7 +83,8 @@ class CommentViewSet(ModelViewSet):
 
     def perform_create(self, serializer):
         user = self.request.user
-        serializer.save(patient=user.patients)
+        patient = get_object_or_404(PatientModel, user=user)
+        serializer.save(patient=patient)
         
 class TypeViewSet(ModelViewSet):
     queryset = VaccineTypeModel.objects.all()

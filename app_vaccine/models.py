@@ -57,7 +57,7 @@ class BookingModel(models.Model):
     patient_name = models.CharField(max_length=20)
     patient_age = models.PositiveIntegerField()
     vaccine = models.ForeignKey(VaccineModel, on_delete=models.CASCADE, related_name='booked_vaccine')
-    book_date = models.DateField(default=date.today)
+    first_dose_date = models.DateField(default=date.today)
     dose_dates = models.JSONField(default=list, blank=True)
 
     def save(self, *args, **kwargs):
