@@ -80,7 +80,7 @@ class BookCampaignViewSet(ModelViewSet):
 class CommentViewSet(ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
-
+    permission_classes = [AllowAny]
     def perform_create(self, serializer):
         user = self.request.user
         patient = get_object_or_404(PatientModel, user=user)
