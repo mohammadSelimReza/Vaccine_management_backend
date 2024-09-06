@@ -4,7 +4,9 @@ from datetime import date
 from django.core.exceptions import ValidationError
 from django.shortcuts import get_object_or_404
 from app_user.models import PatientModel
+from django.contrib.auth.models import User
 class VaccineSerializer(serializers.ModelSerializer):
+    # added_by =serializers.CharField(source='added_by.name',)
     class Meta:
         model = VaccineModel
         fields = '__all__'
@@ -15,7 +17,8 @@ class VaccineSerializer(serializers.ModelSerializer):
         return value
 
 class VaccineCampaignSerializer(serializers.ModelSerializer):
-  
+    campaign_vaccine_name = serializers.CharField(source='campaign_vaccine.name', read_only=True)
+    added_by_name = serializers.CharField(source='added_by.name', read_only=True)
     class Meta:
         model = VaccineCampaignModel
         fields = '__all__'
@@ -39,15 +42,16 @@ class BookVaccineSerializer(serializers.ModelSerializer):
         return value
     
 class BookCampaignSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = BookingCampaignModel
-        fields = ['patient_name','patient_age','campaign_name','booked_date']
-    def validate_first_dose_date(self, value):
+        fields = ['user', 'patient_name', 'patient_age', 'campaign_name', 'booked_date']
+
+    def validate_booked_date(self, value):
         if value < date.today():
             raise ValidationError("The date cannot be in the past.")
         return value
-    def create(self,validated_data):
+
+    def create(self, validated_data):
         validated_data['is_booked'] = True
         return super().create(validated_data)
         

@@ -19,4 +19,5 @@ urlpatterns = [
     path('api/token/',TokenObtainPairView.as_view(),name='apiToken'),
     path('api/token/refresh/',TokenRefreshView.as_view(),name='apiTokenRefresh'),
     path('update-password/', views.UserPasswordUpdateView.as_view(), name='update-password'),
+    path('total-patients/', views.TotalPatientViewCount.as_view(), name='total_patients_count'),
 ]

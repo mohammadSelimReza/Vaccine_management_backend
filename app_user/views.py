@@ -1,7 +1,5 @@
 from rest_framework import viewsets,generics,status
 from rest_framework.permissions import AllowAny,IsAuthenticated
-from .models import PatientModel,DoctorModel
-from .serializers import UserSerializer,UserPasswordUpdateSerializer,PatientRegistrationSerializer,DoctorRegistrationSerializer,LoginSerializer,UserNameUpdateSerializer,PatientProfileUpdateSerializer,DoctorProfileUpdateSerializer
 from rest_framework.views import APIView
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode,urlsafe_base64_decode
@@ -13,7 +11,8 @@ from django.contrib.auth.models import User
 from django.shortcuts import redirect
 from  django.contrib.auth import authenticate,login,logout
 from rest_framework.authtoken.models import Token
-
+from .models import PatientModel,DoctorModel,TotalPatientsModel
+from .serializers import UserSerializer,UserPasswordUpdateSerializer,PatientRegistrationSerializer,DoctorRegistrationSerializer,LoginSerializer,UserNameUpdateSerializer,PatientProfileUpdateSerializer,DoctorProfileUpdateSerializer
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -96,31 +95,38 @@ def activate(request, uid64, token):
     if user is not None and default_token_generator.check_token(user, token):
         user.is_active = True
         user.save()
-        return redirect('https://vaccine-hub.netlify.app')
+        total_count,created= TotalPatientsModel.objects.get_or_create(id=1)
+        total_count.total_patients += 1
+        total_count.save()
+        return redirect('https://vaccine-hub.netlify.app/login')
     
-    return redirect('https://vaccine-hub.netlify.app')
+    return redirect('https://vaccine-hub.netlify.app/login')
       
 
     
 class LoginSerializerView(APIView):
     permission_classes = [AllowAny]
-    def post(self,request):
-        serializer = LoginSerializer(data=self.request.data)
+    print("working")
+    def post(self, request):
+        serializer = LoginSerializer(data=request.data)
         if serializer.is_valid():
             username = serializer.validated_data['username']
             password = serializer.validated_data['password']
             user = authenticate(username=username, password=password)
             
             if user:
-                token,_ = Token.objects.get_or_create(user=user)
-                login(request,user)
-                return Response({'token':token.key,'user.id':user.id})
+                token, _ = Token.objects.get_or_create(user=user)
+                login(request, user)
+               
+                return Response({'token': token.key, 'user.id': user.id})
             else:
                 return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+
         return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
-    
+
             
 class LogoutView(APIView):
+    print("Working")
     def get(self,request):
         request.user.auth_token.delete()
         logout(request)
@@ -175,3 +181,10 @@ class UserProfileUpdateView(generics.RetrieveUpdateAPIView):
                 {"detail": "User type not recognized or you do not have permission to access this profile."},
                 status=status.HTTP_403_FORBIDDEN
             )
+            
+class TotalPatientViewCount(APIView):
+    queryset = TotalPatientsModel.objects.all()
+    def get(self,request):
+        total_count = TotalPatientsModel.objects.get(id=1)
+        count = total_count.total_patients if total_count else 0
+        return Response({"total_patients":count})

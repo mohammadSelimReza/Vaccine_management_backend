@@ -13,6 +13,7 @@ VACCINE_TYPE_CHOICES = [
     ('live_attenuated', 'Live attenuated'),
     ('recombinant', 'Recombinant'),
     ('inactivated_toxin', 'Inactivated toxin'),
+    ('polio-vaccine',"Polio Vaccine")
 ]
 # constants.py
 

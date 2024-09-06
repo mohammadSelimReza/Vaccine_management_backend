@@ -6,7 +6,7 @@ from django.core.files.base import ContentFile
 
 # Create your models here.
 class PatientModel(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='patients')
+    user = models.OneToOneField(User, on_delete=models.CASCADE,primary_key=True, related_name='patients')
     birth_date = models.DateField()
     gender = models.CharField(max_length=10, choices=GENDER_TYPE)
     nid = models.IntegerField(validators=[validate_nid])
@@ -43,7 +43,7 @@ class PatientModel(models.Model):
     
     
 class DoctorModel(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='doctor')
+    user = models.OneToOneField(User, on_delete=models.CASCADE,primary_key=True, related_name='doctor')
     birth_date = models.DateField()
     gender = models.CharField(max_length=10, choices=GENDER_TYPE)
     nid = models.IntegerField(unique=True)
@@ -77,3 +77,7 @@ class DoctorModel(models.Model):
 
     def __str__(self):
         return f"Dr. {self.user.username}"
+    
+    
+class TotalPatientsModel(models.Model):
+    total_patients = models.PositiveIntegerField(default=0)

@@ -7,6 +7,7 @@ from cloudinary.models import CloudinaryField
 from datetime import date
 from django.shortcuts import get_object_or_404
 class VaccineModel(models.Model):
+    id = models.AutoField(primary_key=True,unique=True) 
     vaccine_name = models.CharField(max_length=50)
     slug = models.SlugField(max_length=60, unique=True, blank=True)
     manufacturer = models.CharField(max_length=100)
@@ -29,6 +30,7 @@ class VaccineModel(models.Model):
         return self.vaccine_name
 
 class VaccineCampaignModel(models.Model):
+    id = models.AutoField(primary_key=True,unique=True) 
     campaign_name = models.CharField(max_length=100)
     slug = models.SlugField(max_length=60, unique=True, blank=True)
     campaign_vaccine = models.ForeignKey(VaccineModel, on_delete=models.CASCADE, related_name='campaigns')
@@ -54,6 +56,7 @@ class VaccineCampaignModel(models.Model):
         return self.campaign_name
 
 class BookingModel(models.Model):
+    id = models.AutoField(primary_key=True,default=0) 
     patient_name = models.CharField(max_length=20)
     patient_age = models.PositiveIntegerField()
     vaccine = models.ForeignKey(VaccineModel, on_delete=models.CASCADE, related_name='booked_vaccine')
@@ -66,6 +69,8 @@ class BookingModel(models.Model):
         super(BookingModel, self).save(*args, **kwargs)
 
 class BookingCampaignModel(models.Model):
+    id = models.AutoField(primary_key=True) 
+    user = models.ForeignKey(PatientModel,related_name='bookCampaing',on_delete=models.CASCADE)
     patient_name = models.CharField(max_length=20)
     patient_age = models.PositiveIntegerField()
     campaign_name = models.ForeignKey(VaccineCampaignModel, on_delete=models.CASCADE, related_name='booked_campaign')
@@ -77,7 +82,7 @@ class Comment(models.Model):
     patient = models.ForeignKey(PatientModel, on_delete=models.CASCADE, related_name='comments')
     patient_name = models.CharField(max_length=30,default='person', blank=True)
     patient_img = models.URLField(blank=True, null=True,default='person')
-    campaign = models.ForeignKey(VaccineCampaignModel, on_delete=models.CASCADE, related_name='comments')
+    campaign = models.ForeignKey(VaccineCampaignModel, on_delete=models.CASCADE, related_name='comments',default='user')
     text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -88,3 +93,14 @@ class VaccineTypeModel(models.Model):
     vaccine_type = models.CharField(max_length=20, choices=VACCINE_TYPE_CHOICES)
     type_img = CloudinaryField('type_img', blank=True, null=True)
     tye_description = models.CharField(max_length=500)
+    
+class TotalVaccineModel(models.Model):
+    total_vaccine = models.PositiveIntegerField(default=0)
+    
+    
+class TotalCampaignAdded(models.Model):
+    total_campaign = models.PositiveIntegerField(default=0)
+    campaign_target = models.PositiveBigIntegerField(default=0)
+    
+class TotalBookedOnCampaign(models.Model):
+    total_booked = models.PositiveIntegerField(default=0)
