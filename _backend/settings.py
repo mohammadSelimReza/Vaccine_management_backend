@@ -31,7 +31,7 @@ SECRET_KEY = 'django-insecure-z*z)xemut!^q92vwjp4&#(b4-5esefxlhx_q%^d92mkcu*_3em
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
@@ -109,19 +109,14 @@ WSGI_APPLICATION = '_backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
+
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'postgres',
-        'USER': 'postgres.yhkuocbonhzsuvkqztvn',
-        'PASSWORD': 'Django@vaccine@2024',
+        'USER': 'postgres.yfblvkymrgjptiizynwl',
+        'PASSWORD': 'Selim.Reza@database@1999',
         'HOST': 'aws-0-ap-southeast-1.pooler.supabase.com',
         'PORT': '6543'
     }
