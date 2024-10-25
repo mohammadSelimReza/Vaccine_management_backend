@@ -32,7 +32,7 @@ SECRET_KEY = 'django-insecure-z*z)xemut!^q92vwjp4&#(b4-5esefxlhx_q%^d92mkcu*_3em
 DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
-
+CSRF_TRUSTED_ORIGINS = ['https://vaccine-management-backend-phvj.onrender.com']
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
