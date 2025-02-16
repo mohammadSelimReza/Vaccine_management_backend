@@ -3,12 +3,10 @@ Django
 psycopg2-binary
 sqlparse
 tzdata
-whitenoise
 certifi
 charset-normalizer
 cloudinary
 django-cors-headers
-django-environ
 django-filter
 djangorestframework
 djangorestframework-simplejwt
