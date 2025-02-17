@@ -4,6 +4,19 @@ from .models import PatientModel,DoctorModel
 from .constants import GENDER_TYPE, USER_TYPE
 from .validators import generate_unique_patient_number
 from django.contrib.auth.hashers import make_password
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+class MyTokenPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+        token["first_name"] = user.first_name
+        token["last_name"] = user.last_name
+        token["username"] = user.username
+        token["email"] = user.email
+        token["id"] = user.id
+        return token
+
+
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, style={'input_type': 'password'})
     password2 = serializers.CharField(write_only=True, style={'input_type': 'password'})

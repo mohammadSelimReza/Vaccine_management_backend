@@ -12,7 +12,14 @@ from django.shortcuts import redirect
 from  django.contrib.auth import authenticate,login,logout
 from rest_framework.authtoken.models import Token
 from .models import PatientModel,DoctorModel,TotalPatientsModel
-from .serializers import UserSerializer,UserPasswordUpdateSerializer,PatientRegistrationSerializer,DoctorRegistrationSerializer,LoginSerializer,UserNameUpdateSerializer,PatientProfileUpdateSerializer,DoctorProfileUpdateSerializer
+from .serializers import MyTokenPairSerializer,UserSerializer,UserPasswordUpdateSerializer,PatientRegistrationSerializer,DoctorRegistrationSerializer,LoginSerializer,UserNameUpdateSerializer,PatientProfileUpdateSerializer,DoctorProfileUpdateSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView
+
+
+class MyTokenObtainPairView(TokenObtainPairView):
+    serializer_class = MyTokenPairSerializer
+    permission_classes = [AllowAny]
+    
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -47,7 +54,7 @@ class PatientRegistrationViewSet(generics.CreateAPIView):
             uid = urlsafe_base64_encode(force_bytes(user.pk))
 
             # Prepare the confirmation email
-            confirm_link = f"https://vaccine-management-backend-phvj.onrender.com/user/activate/{uid}/{token}"
+            confirm_link = f"https://vaccinehub.vercel.app/user/activate/{uid}/{token}"
             email_subject = "Confirm your email"
             email_body = render_to_string('confirm_email.html', {'confirm_link': confirm_link})
             email = EmailMultiAlternatives(email_subject, '', to=[user.email])
@@ -74,7 +81,7 @@ class DoctorRegistrationViewSet(APIView):
             uid = urlsafe_base64_encode(force_bytes(user.pk))
 
             # Prepare the confirmation email
-            confirm_link = f"https://vaccine-management-backend-phvj.onrender.com/user/activate/{uid}/{token}"
+            confirm_link = f"https://vaccinehub.vercel.app/user/activate/{uid}/{token}"
             email_subject = "Confirm your email"
             email_body = render_to_string('confirm_email.html', {'confirm_link': confirm_link})
             email = EmailMultiAlternatives(email_subject, '', to=[user.email])

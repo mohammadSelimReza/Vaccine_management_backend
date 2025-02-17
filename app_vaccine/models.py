@@ -3,6 +3,7 @@ from .constants import VACCINE_FOR, VACCINE_TYPE_CHOICES, BANGLADESH_DISTRICTS
 from app_user.models import DoctorModel, PatientModel
 from datetime import timedelta
 from cloudinary.models import CloudinaryField
+from django.utils.text import slugify
 # import get_object_or_404()
 from datetime import date
 from django.shortcuts import get_object_or_404
@@ -19,7 +20,7 @@ class VaccineModel(models.Model):
     description = models.TextField(blank=True, null=True)
     vaccine_for = models.CharField(max_length=10, choices=VACCINE_FOR)
     vaccine_type = models.CharField(max_length=20, choices=VACCINE_TYPE_CHOICES)
-    vaccine_img = CloudinaryField('vaccine_img', blank=True, null=True)
+    vaccine_img = models.URLField(blank=True,null=True)
     added_by = models.ForeignKey(DoctorModel, on_delete=models.CASCADE, related_name='vaccines')
 
     def calculate_dose_dates(self, start_date):
@@ -41,7 +42,7 @@ class VaccineCampaignModel(models.Model):
     campaign_for = models.CharField(max_length=10, choices=VACCINE_FOR)
     added_by = models.ForeignKey(DoctorModel, on_delete=models.CASCADE, related_name='campaigns')
     description = models.TextField(blank=True, null=True)
-    campaign_img = CloudinaryField('campaign_img', blank=True, null=True)
+    campaign_img =  models.URLField(blank=True,null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -91,7 +92,7 @@ class Comment(models.Model):
 
 class VaccineTypeModel(models.Model):
     vaccine_type = models.CharField(max_length=20, choices=VACCINE_TYPE_CHOICES)
-    type_img = CloudinaryField('type_img', blank=True, null=True)
+    type_img = models.URLField(blank=True,null=True)
     tye_description = models.CharField(max_length=500)
     
 class TotalVaccineModel(models.Model):
