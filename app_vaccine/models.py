@@ -4,6 +4,7 @@ from app_user.models import DoctorModel, PatientModel
 from datetime import timedelta
 from cloudinary.models import CloudinaryField
 from django.utils.text import slugify
+from django.contrib.auth.models import User
 # import get_object_or_404()
 from datetime import date
 from django.shortcuts import get_object_or_404
@@ -57,7 +58,8 @@ class VaccineCampaignModel(models.Model):
         return self.campaign_name
 
 class BookingModel(models.Model):
-    id = models.AutoField(primary_key=True,default=0) 
+    user = models.ForeignKey(User,on_delete=models.SET_NULL,null=True,blank=True)
+    id = models.AutoField(primary_key=True) 
     patient_name = models.CharField(max_length=20)
     patient_age = models.PositiveIntegerField()
     vaccine = models.ForeignKey(VaccineModel, on_delete=models.CASCADE, related_name='booked_vaccine')
@@ -70,6 +72,7 @@ class BookingModel(models.Model):
         super(BookingModel, self).save(*args, **kwargs)
 
 class BookingCampaignModel(models.Model):
+    user = models.ForeignKey(User,on_delete=models.SET_NULL,null=True,blank=True)
     id = models.AutoField(primary_key=True) 
     user = models.ForeignKey(PatientModel,related_name='bookCampaing',on_delete=models.CASCADE)
     patient_name = models.CharField(max_length=20)

@@ -33,7 +33,7 @@ class BookVaccineSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = BookingModel
-        fields = ['patient_name', 'patient_age', 'vaccine', 'first_dose_date', 'dose_dates']
+        fields = ['user','patient_name', 'patient_age', 'vaccine', 'first_dose_date', 'dose_dates']
         read_only_fields = ['dose_dates']
 
     def validate_first_dose_date(self, value):
