@@ -1,6 +1,6 @@
 USER_TYPE = (
-    ('Patient', 'Patient'),
-    ('Doctor', 'Doctor'),
+    ('patient', 'Patient'),
+    ('doctor', 'Doctor'),
 )
 GENDER_TYPE = (
     ('Male', 'Male'),
