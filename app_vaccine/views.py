@@ -10,10 +10,33 @@ from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from app_user.models import PatientModel
 from rest_framework.views import APIView
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import OrderingFilter
+
 class VaccineView(ModelViewSet):
     queryset = VaccineModel.objects.all()
     serializer_class = VaccineSerializer
     permission_classes = [AllowAny]
+    filter_backends = [DjangoFilterBackend, OrderingFilter]
+    filterset_fields = ['vaccine_for']
+    ordering_fields = ['vaccine_name', 'expiration_date']
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+
+        # Handle filtering by 'vaccine_for'
+        vaccine_filtering = self.request.query_params.get('type', None)
+        if vaccine_filtering and vaccine_filtering.lower() != "none":
+            queryset = queryset.filter(vaccine_for=vaccine_filtering)
+
+        # Handle ordering, apply ordering only if it's valid
+        ordering = self.request.query_params.get('ordering', None)
+        if ordering and ordering in self.ordering_fields:
+            queryset = queryset.order_by(ordering)
+
+        return queryset
+
+
 
 class CampaignView(ModelViewSet):
     queryset = VaccineCampaignModel.objects.all()
@@ -45,6 +68,10 @@ class VaccineListCreateAPIView(generics.ListCreateAPIView):
         # Log or print debug info
         print(f"Total vaccines updated: {total_count.total_vaccine}")
 
+class VaccineDetailAPIView(generics.RetrieveAPIView):
+    queryset = VaccineModel.objects.all()
+    serializer_class = VaccineSerializer
+    permission_classes = [AllowAny]
         
 class EditVaccineView(generics.RetrieveUpdateAPIView):
     queryset = VaccineModel.objects.all()

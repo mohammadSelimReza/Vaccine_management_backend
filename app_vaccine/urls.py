@@ -13,6 +13,7 @@ urlpatterns = [
     path('', include(router.urls)),
     # Directly add the ListCreateAPIView to the urlpatterns
     path('add/', views.VaccineListCreateAPIView.as_view(), name='add-vaccine'),
+    path('details/<pk>/',views.VaccineDetailAPIView.as_view(),name='vaccine-detail'),
     path('campaign-add/', views.VaccineCampaignListCreateAPIView.as_view(), name='add-campaign'),
     path('edit/<pk>/',views.EditVaccineView.as_view(), name='edit-campaign'),
     path('delete/<int:pk>/',views.VaccineDeleteView.as_view(), name='deleteVaccine'),
