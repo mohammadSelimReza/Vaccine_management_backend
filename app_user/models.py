@@ -43,7 +43,7 @@ class PatientModel(models.Model):
     
     
 class DoctorModel(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE,primary_key=True, related_name='doctor')
+    user = models.OneToOneField(User, on_delete=models.CASCADE,primary_key=True)
     birth_date = models.DateField()
     gender = models.CharField(max_length=10, choices=GENDER_TYPE)
     nid = models.IntegerField(unique=True)

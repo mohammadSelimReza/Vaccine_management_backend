@@ -99,8 +99,9 @@ class VaccineTypeModel(models.Model):
     tye_description = models.CharField(max_length=500)
     
 class TotalVaccineModel(models.Model):
-    total_vaccine = models.PositiveIntegerField(default=0)
-    
+    total_vaccine = models.IntegerField(default=0)
+    def __str__(self):
+        return f"{self.total_vaccine} "
     
 class TotalCampaignAdded(models.Model):
     total_campaign = models.PositiveIntegerField(default=0)

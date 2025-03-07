@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'cloudinary',
     'rest_framework',
     'rest_framework.authtoken',
+    'django_filters',
     # app
     'app_core',
     'app_user',
@@ -96,8 +97,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'postgres',
-        'USER': 'postgres.bmtdbbbfmxfqvxuudkmx',
-        'PASSWORD': 'Django_Test@2025',
+        'USER': 'postgres.qmynuextuaxriyenmfbg',
+        'PASSWORD': 'Django_Test_2025',
         'HOST': 'aws-0-ap-southeast-1.pooler.supabase.com',
         'PORT': '6543'
     }

@@ -8,10 +8,15 @@ from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import AllowAny
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
-from app_user.models import PatientModel
+from app_user.models import PatientModel,DoctorModel
 from rest_framework.views import APIView
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import OrderingFilter
+from rest_framework import pagination
+class VaccinePagination(pagination.PageNumberPagination):
+    page_size = 6
+    page_size_query_param = page_size
+    max_page_size = 100
 
 class VaccineView(ModelViewSet):
     queryset = VaccineModel.objects.all()
@@ -20,7 +25,7 @@ class VaccineView(ModelViewSet):
     filter_backends = [DjangoFilterBackend, OrderingFilter]
     filterset_fields = ['vaccine_for']
     ordering_fields = ['vaccine_name', 'expiration_date']
-
+    pagination_class = VaccinePagination
     def get_queryset(self):
         queryset = super().get_queryset()
 
@@ -49,24 +54,24 @@ class VaccineListCreateAPIView(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
-        doctor = self.request.user.doctor
-        
+        user  = self.request.user
+        print(user)
+        find_doctor = DoctorModel.objects.get(user=user)
+        print(find_doctor)
         # Ensure the doctor is verified before proceeding
-        if not doctor.is_valid:
+        if find_doctor.user_type != 'doctor':
             raise ValidationError("Only verified doctors can add vaccines.")
         
         # Fetch or create the TotalVaccineModel instance
-        total_count, created = TotalVaccineModel.objects.get_or_create(id=1)
-        
-        # Increment the total vaccine count and save
-        total_count.total_vaccine += 1
-        total_count.save()
-
+        total = TotalVaccineModel.objects.get(id=1)
+        total.total_vaccine += 1
+        total.save()
+        print(total)
         # Save the vaccine entry with the associated doctor
-        serializer.save(added_by=doctor)
+        serializer.save(added_by=find_doctor)
         
         # Log or print debug info
-        print(f"Total vaccines updated: {total_count.total_vaccine}")
+        print(f"Total vaccines updated: {total.total_vaccine}")
 
 class VaccineDetailAPIView(generics.RetrieveAPIView):
     queryset = VaccineModel.objects.all()
@@ -95,14 +100,15 @@ class VaccineCampaignListCreateAPIView(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
-        doctor = self.request.user.doctor
-        if not doctor.is_valid:
+        user = self.request.user
+        doctor = DoctorModel.objects.get(user=user)
+        if doctor.user_type != 'doctor':
             raise serializers.ValidationError("Only verified doctors can create vaccine campaigns.")
         total_count,created=TotalCampaignAdded.objects.get_or_create(id=1)
         total_count.total_campaign += 1
         total_count.campaign_target += serializer.validated_data['target_population']
         total_count.save()
-        serializer.save(added_by=doctor)
+        serializer.save(added_by=doctor )
         
 class BookVaccineViewSet(ModelViewSet):
     queryset = BookingModel.objects.all()
